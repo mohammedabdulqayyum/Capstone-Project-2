@@ -246,4 +246,41 @@ df_circuit_insights.write.mode("overwrite").saveAsTable("capstone_project_2.gold
 
 # COMMAND ----------
 
+from delta.tables import DeltaTable
+ 
+# Optimize and Z-order the driver performance table
+driver_performance_table = DeltaTable.forName(spark, "capstone_project_2.gold.driver_performance")
+driver_performance_table.optimize().executeCompaction()
+ 
+ 
+# Optimize and Z-order the constructor standings table
+constructor_standings_table = DeltaTable.forName(spark, "capstone_project_2.gold.constructor_standings")
+constructor_standings_table.optimize().executeCompaction()
+ 
+ 
+# Optimize and Z-order the circuit insights table
+circuit_insights_table = DeltaTable.forName(spark, "capstone_project_2.gold.circuit_insights")
+circuit_insights_table.optimize().executeCompaction()
+
+# COMMAND ----------
+
+spark.sql("""
+OPTIMIZE capstone_project_2.gold.driver_performance
+ZORDER BY (driver_id)
+""")
+ 
+# Execute SQL command to optimize and Z-Order the constructor_standings table
+spark.sql("""
+OPTIMIZE capstone_project_2.gold.constructor_standings
+ZORDER BY (constructor_id)
+""")
+ 
+# Execute SQL command to optimize and Z-Order the circuit_insights table
+spark.sql("""
+OPTIMIZE capstone_project_2.gold.circuit_insights
+ZORDER BY (circuit_id)
+""")
+
+# COMMAND ----------
+
 
